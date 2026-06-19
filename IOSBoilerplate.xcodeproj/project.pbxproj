@@ -30,19 +30,44 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D82042DF2FE56CB60086ADE6 /* IOSBoilerplate */ = {
+		D82042DF2FE56CB60086ADE6 /* IOSBoilerplate/App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = IOSBoilerplate;
+			path = IOSBoilerplate/App;
 			sourceTree = "<group>";
 		};
-		D82042ED2FE56CB80086ADE6 /* IOSBoilerplateTests */ = {
+		D82042ED2FE56CB80086ADE6 /* IOSBoilerplate/Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = IOSBoilerplateTests;
+			path = IOSBoilerplate/Tests;
 			sourceTree = "<group>";
 		};
-		D82042F72FE56CB80086ADE6 /* IOSBoilerplateUITests */ = {
+		D82042F72FE56CB80086ADE6 /* IOSBoilerplate/UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = IOSBoilerplateUITests;
+			path = IOSBoilerplate/UITests;
+			sourceTree = "<group>";
+		};
+		D82043082FE56CB80086ADE6 /* IOSBoilerplate/Core */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IOSBoilerplate/Core;
+			sourceTree = "<group>";
+		};
+		D82043092FE56CB80086ADE6 /* IOSBoilerplate/Features */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IOSBoilerplate/Features;
+			sourceTree = "<group>";
+		};
+		D820430A2FE56CB80086ADE6 /* IOSBoilerplate/DesignSystem */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IOSBoilerplate/DesignSystem;
+			sourceTree = "<group>";
+		};
+		D820430B2FE56CB80086ADE6 /* IOSBoilerplate/Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IOSBoilerplate/Shared;
+			sourceTree = "<group>";
+		};
+		D820430C2FE56CB80086ADE6 /* IOSBoilerplate/Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IOSBoilerplate/Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +100,14 @@
 		D82042D42FE56CB60086ADE6 = {
 			isa = PBXGroup;
 			children = (
-				D82042DF2FE56CB60086ADE6 /* IOSBoilerplate */,
-				D82042ED2FE56CB80086ADE6 /* IOSBoilerplateTests */,
-				D82042F72FE56CB80086ADE6 /* IOSBoilerplateUITests */,
+				D82042DF2FE56CB60086ADE6 /* IOSBoilerplate/App */,
+				D82043082FE56CB80086ADE6 /* IOSBoilerplate/Core */,
+				D82043092FE56CB80086ADE6 /* IOSBoilerplate/Features */,
+				D820430A2FE56CB80086ADE6 /* IOSBoilerplate/DesignSystem */,
+				D820430B2FE56CB80086ADE6 /* IOSBoilerplate/Shared */,
+				D820430C2FE56CB80086ADE6 /* IOSBoilerplate/Resources */,
+				D82042ED2FE56CB80086ADE6 /* IOSBoilerplate/Tests */,
+				D82042F72FE56CB80086ADE6 /* IOSBoilerplate/UITests */,
 				D82042DE2FE56CB60086ADE6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +138,12 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				D82042DF2FE56CB60086ADE6 /* IOSBoilerplate */,
+				D82042DF2FE56CB60086ADE6 /* IOSBoilerplate/App */,
+				D82043082FE56CB80086ADE6 /* IOSBoilerplate/Core */,
+				D82043092FE56CB80086ADE6 /* IOSBoilerplate/Features */,
+				D820430A2FE56CB80086ADE6 /* IOSBoilerplate/DesignSystem */,
+				D820430B2FE56CB80086ADE6 /* IOSBoilerplate/Shared */,
+				D820430C2FE56CB80086ADE6 /* IOSBoilerplate/Resources */,
 			);
 			name = IOSBoilerplate;
 			packageProductDependencies = (
@@ -131,7 +166,7 @@
 				D82042EC2FE56CB80086ADE6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				D82042ED2FE56CB80086ADE6 /* IOSBoilerplateTests */,
+				D82042ED2FE56CB80086ADE6 /* IOSBoilerplate/Tests */,
 			);
 			name = IOSBoilerplateTests;
 			packageProductDependencies = (
@@ -154,7 +189,7 @@
 				D82042F62FE56CB80086ADE6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				D82042F72FE56CB80086ADE6 /* IOSBoilerplateUITests */,
+				D82042F72FE56CB80086ADE6 /* IOSBoilerplate/UITests */,
 			);
 			name = IOSBoilerplateUITests;
 			packageProductDependencies = (

@@ -28,6 +28,10 @@ final class IOSBoilerplateUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
+        // Smoke check: verify the initial greeting is visible
+        let helloText = app.staticTexts["Hello, world!"]
+        XCTAssertTrue(helloText.waitForExistence(timeout: 3), "Expected to see the initial greeting on launch")
+
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         // XCUIAutomation Documentation
         // https://developer.apple.com/documentation/xcuiautomation
@@ -41,3 +45,4 @@ final class IOSBoilerplateUITests: XCTestCase {
         }
     }
 }
+
