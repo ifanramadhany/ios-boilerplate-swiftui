@@ -8,10 +8,32 @@ IOSBoilerplate is a SwiftUI iOS project structured for a growing team and a larg
 IOSBoilerplate
 ├── App
 ├── Core
+│   ├── Networking
+│   ├── Persistence
+│   ├── Config
+│   ├── DependencyInjection
+│   ├── Analytics
+│   └── Logging
 ├── Features
+│   └── Home
+│       ├── Views
+│       ├── ViewModels
+│       ├── Models
+│       └── Services
 ├── DesignSystem
+│   ├── Components
+│   ├── Colors
+│   ├── Typography
+│   ├── Spacing
+│   └── Theme
 ├── Shared
+│   ├── Extensions
+│   ├── Utilities
+│   └── Constants
 ├── Resources
+│   ├── Assets.xcassets
+│   ├── Localization
+│   └── Fonts
 ├── Tests
 └── UITests
 ```
@@ -77,6 +99,57 @@ xcodebuild \
 
 Run tests from Xcode when simulator access and signing are configured.
 
+## Code Quality
+
+Install SwiftLint and SwiftFormat:
+
+```sh
+brew bundle
+```
+
+Run lint:
+
+```sh
+make lint
+```
+
+Format code:
+
+```sh
+make format
+```
+
+Check formatting without changing files:
+
+```sh
+make format-check
+```
+
+The project keeps SwiftLint and SwiftFormat as command-line tools instead of mandatory Xcode build phases. This avoids breaking local builds when a developer has not installed the tools yet. CI should install and run them for pull requests.
+
+## Pull Request Checks
+
+Every pull request to `main` should pass the GitHub Actions workflow in `.github/workflows/ci.yml`.
+
+The workflow runs:
+
+```sh
+make format-check
+make lint
+make build
+make test-build
+```
+
+Before opening a pull request, run:
+
+```sh
+make format
+make lint
+make build
+```
+
+Repository maintainers should enable branch protection for `main` in GitHub and require the `Quality and Build` check before merging.
+
 ## Team Conventions
 
 - Keep pull requests focused and small enough to review.
@@ -88,6 +161,4 @@ Run tests from Xcode when simulator access and signing are configured.
 
 ## Recommended Next Tooling
 
-- SwiftLint for style rules.
-- SwiftFormat for consistent formatting.
-- CI that runs build, test build, lint, and formatting checks.
+- Branch protection on `main` requiring CI to pass before merge.
