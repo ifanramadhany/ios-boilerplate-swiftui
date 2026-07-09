@@ -20,13 +20,19 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(AppColor.iconPrimary)
 
-            Text(viewModel.content.title)
+            viewModel.content.title.text
                 .font(AppTypography.title)
                 .foregroundStyle(AppColor.textPrimary)
 
-            Text(viewModel.content.subtitle)
-                .font(AppTypography.body)
-                .foregroundStyle(AppColor.textSecondary)
+            if let subtitle = viewModel.content.subtitle {
+                subtitle.text
+                    .font(AppTypography.body)
+                    .foregroundStyle(AppColor.textSecondary)
+            } else if let subtitleText = viewModel.content.subtitleText {
+                Text(subtitleText)
+                    .font(AppTypography.body)
+                    .foregroundStyle(AppColor.textSecondary)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
@@ -40,5 +46,18 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+private extension HomeLocalizedText {
+    var text: Text {
+        switch self {
+        case .welcomeTitle:
+            Text("home.welcome.title")
+        case .welcomeSubtitle:
+            Text("home.welcome.subtitle")
+        case .loadError:
+            Text("home.error.load")
+        }
     }
 }

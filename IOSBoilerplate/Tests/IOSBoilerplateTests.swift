@@ -20,9 +20,14 @@ struct IOSBoilerplateTests {
         #expect(AppAppearance.dark.colorScheme != nil)
     }
 
+    @Test func appLanguageMapsToLocale() {
+        #expect(AppLanguage.english.locale.identifier == "en")
+        #expect(AppLanguage.indonesian.locale.identifier == "id")
+    }
+
     @MainActor
     @Test func homeViewModelLoadsContentFromInjectedService() async {
-        let content = HomeContent(title: "Injected", subtitle: "Loaded from a mock service")
+        let content = HomeContent(title: .welcomeTitle, subtitle: .welcomeSubtitle)
         let viewModel = HomeViewModel(service: MockHomeService(result: .success(content)))
 
         await viewModel.load()
@@ -36,14 +41,14 @@ struct IOSBoilerplateTests {
 
         await viewModel.load()
 
-        #expect(viewModel.content.title == "Something went wrong")
-        #expect(viewModel.content.subtitle == MockError.failure.localizedDescription)
+        #expect(viewModel.content.title == .loadError)
+        #expect(viewModel.content.subtitleText == MockError.failure.localizedDescription)
     }
 
     @MainActor
     @Test func settingsViewModelLoadsItemsFromInjectedService() async {
         let items = [
-            SettingsItem(id: "theme", title: "Theme", subtitle: "System")
+            SettingsItem(id: "theme", title: .theme, subtitle: .systemAppearance)
         ]
         let viewModel = SettingsViewModel(service: MockSettingsService(result: .success(items)))
 

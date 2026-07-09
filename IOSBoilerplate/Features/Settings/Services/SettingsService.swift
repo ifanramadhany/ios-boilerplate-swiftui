@@ -15,14 +15,27 @@ struct DefaultSettingsService: SettingsService {
         [
             SettingsItem(
                 id: "app-version",
-                title: "App Version",
-                subtitle: "1.0"
+                title: .appVersion,
+                subtitleText: "1.0"
             ),
             SettingsItem(
                 id: "environment",
-                title: "Environment",
-                subtitle: environment.rawValue.capitalized
+                title: .environment,
+                subtitle: environment.settingsText
             )
         ]
+    }
+}
+
+private extension AppEnvironment {
+    var settingsText: SettingsLocalizedText {
+        switch self {
+        case .development:
+            .developmentEnvironment
+        case .staging:
+            .stagingEnvironment
+        case .production:
+            .productionEnvironment
+        }
     }
 }

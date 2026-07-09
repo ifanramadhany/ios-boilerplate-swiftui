@@ -4,8 +4,8 @@ import SwiftUI
 @MainActor
 final class HomeViewModel: ObservableObject {
     @Published private(set) var content = HomeContent(
-        title: "Hello, world!",
-        subtitle: "IOSBoilerplate is ready."
+        title: .welcomeTitle,
+        subtitle: .welcomeSubtitle
     )
 
     private let service: HomeService
@@ -23,8 +23,8 @@ final class HomeViewModel: ObservableObject {
             content = try await service.loadContent()
         } catch {
             content = HomeContent(
-                title: "Something went wrong",
-                subtitle: error.localizedDescription
+                title: .loadError,
+                subtitleText: error.localizedDescription
             )
         }
     }

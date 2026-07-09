@@ -5,8 +5,8 @@ protocol HomeService {
 struct DefaultHomeService: HomeService {
     func loadContent() async throws -> HomeContent {
         HomeContent(
-            title: "Hello, world!",
-            subtitle: "IOSBoilerplate is ready."
+            title: .welcomeTitle,
+            subtitle: .welcomeSubtitle
         )
     }
 }

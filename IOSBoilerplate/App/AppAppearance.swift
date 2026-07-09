@@ -9,14 +9,14 @@ enum AppAppearance: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    var title: String {
+    var titleKey: LocalizedStringKey {
         switch self {
         case .system:
-            "System"
+            "appearance.system"
         case .light:
-            "Light"
+            "appearance.light"
         case .dark:
-            "Dark"
+            "appearance.dark"
         }
     }
 

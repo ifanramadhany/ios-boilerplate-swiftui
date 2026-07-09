@@ -22,8 +22,8 @@ final class SettingsViewModel: ObservableObject {
             items = [
                 SettingsItem(
                     id: "error",
-                    title: "Unable to load settings",
-                    subtitle: error.localizedDescription
+                    title: .loadError,
+                    subtitleText: error.localizedDescription
                 )
             ]
         }
