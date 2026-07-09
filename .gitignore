@@ -15,7 +15,6 @@ build/
 
 # Swift Package Manager
 .build/
-Package.resolved
 
 # Fastlane
 fastlane/report.xml
