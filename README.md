@@ -150,6 +150,16 @@ make build
 
 Repository maintainers should enable branch protection for `main` in GitHub and require the `Quality and Build` check before merging.
 
+## Swift Package Manager
+
+Use Swift Package Manager through Xcode when the app needs third-party libraries:
+
+```text
+Xcode -> File -> Add Package Dependencies...
+```
+
+When packages are added, commit the generated `Package.resolved` file. It locks package versions so local builds and CI use the same dependency graph.
+
 ## Team Conventions
 
 - Keep pull requests focused and small enough to review.
