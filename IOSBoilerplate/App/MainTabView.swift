@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @EnvironmentObject private var router: AppRouter
 
     let dependencies: DependencyContainer
@@ -13,29 +14,41 @@ struct MainTabView: View {
         TabView(selection: $router.selectedTab) {
             NavigationStack(path: $router.homePath) {
                 ContentView(service: dependencies.homeService)
-                    .navigationTitle(AppTab.home.title)
+                    .navigationTitle(AppTab.home.title(for: selectedLanguage))
                     .navigationDestination(for: AppRoute.self) { route in
                         destination(for: route)
                     }
             }
             .tabItem {
-                Label(AppTab.home.title, systemImage: AppTab.home.systemImage)
+                Label {
+                    Text(AppTab.home.title(for: selectedLanguage))
+                } icon: {
+                    Image(systemName: AppTab.home.systemImage)
+                }
             }
             .tag(AppTab.home)
 
             NavigationStack(path: $router.settingsPath) {
                 SettingsView(service: dependencies.settingsService)
-                    .navigationTitle(AppTab.settings.title)
+                    .navigationTitle(AppTab.settings.title(for: selectedLanguage))
                     .navigationDestination(for: AppRoute.self) { route in
                         destination(for: route)
                     }
             }
             .tabItem {
-                Label(AppTab.settings.title, systemImage: AppTab.settings.systemImage)
+                Label {
+                    Text(AppTab.settings.title(for: selectedLanguage))
+                } icon: {
+                    Image(systemName: AppTab.settings.systemImage)
+                }
             }
             .tag(AppTab.settings)
         }
         .tint(AppColor.iconPrimary)
+    }
+
+    private var selectedLanguage: AppLanguage {
+        AppLanguage(rawValue: appLanguage) ?? .system
     }
 
     @ViewBuilder

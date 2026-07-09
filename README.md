@@ -68,8 +68,8 @@ Keep feature-specific models, view models, services, and views inside the featur
 
 ## Requirements
 
-- Xcode 26.5 or newer
-- iOS deployment target: 26.5
+- Xcode 16.0 or newer
+- iOS deployment target: 17.0
 - SwiftUI
 - Swift Testing / XCTest
 
