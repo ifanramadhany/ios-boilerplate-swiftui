@@ -5,9 +5,19 @@ enum AppEnvironment: String {
     case staging
     case production
 
+    static let defaultBaseURL = URL(string: "https://api.example.com") ?? URL(fileURLWithPath: "/")
+
     static var current: AppEnvironment {
+        current(from: Bundle.main.infoDictionary)
+    }
+
+    static var currentBaseURL: URL {
+        baseURL(from: Bundle.main.infoDictionary)
+    }
+
+    static func current(from infoDictionary: [String: Any]?) -> AppEnvironment {
         guard
-            let value = Bundle.main.object(forInfoDictionaryKey: "APP_ENVIRONMENT") as? String,
+            let value = infoDictionary?["APP_ENVIRONMENT"] as? String,
             let environment = AppEnvironment(rawValue: value)
         else {
             return .development
@@ -16,14 +26,12 @@ enum AppEnvironment: String {
         return environment
     }
 
-    var baseURL: URL {
-        let fallbackURL = URL(string: "https://api.example.com")
-
+    static func baseURL(from infoDictionary: [String: Any]?) -> URL {
         guard
-            let value = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String,
+            let value = infoDictionary?["API_BASE_URL"] as? String,
             let url = URL(string: value)
         else {
-            return fallbackURL ?? URL(fileURLWithPath: "/")
+            return defaultBaseURL
         }
 
         return url

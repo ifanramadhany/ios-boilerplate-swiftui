@@ -70,6 +70,7 @@ Keep feature-specific models, view models, services, and views inside the featur
 
 - Xcode 16.0 or newer
 - iOS deployment target: 17.0
+- Swift 6 language mode
 - SwiftUI
 - Swift Testing / XCTest
 
@@ -166,6 +167,10 @@ When packages are added, commit the generated `Package.resolved` file. It locks 
 - Add or update tests for behavior changes.
 - Keep target membership correct: app code belongs to the app target, unit tests to `IOSBoilerplateTests`, and UI tests to `IOSBoilerplateUITests`.
 - Prefer feature ownership over broad shared abstractions.
+- Construct feature dependencies in `DependencyContainer`; do not create concrete services inside view models.
+- Keep view models testable by injecting protocols for services, clients, stores, and trackers.
+- Add tests for infrastructure behavior before multiple features depend on it.
+- Keep `Core` protocols small, and add concrete persistence, logging, or analytics implementations only when the app has a real use case.
 - Do not commit user-specific Xcode files such as `xcuserdata`.
 - Document new architecture decisions in this README or a future `Docs/` folder.
 

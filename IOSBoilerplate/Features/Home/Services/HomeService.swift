@@ -3,6 +3,12 @@ protocol HomeService {
 }
 
 struct DefaultHomeService: HomeService {
+    private let apiClient: APIClient
+
+    init(apiClient: APIClient) {
+        self.apiClient = apiClient
+    }
+
     func loadContent() async throws -> HomeContent {
         HomeContent(
             title: .welcomeTitle,

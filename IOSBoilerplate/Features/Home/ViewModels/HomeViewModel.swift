@@ -10,10 +10,6 @@ final class HomeViewModel: ObservableObject {
 
     private let service: HomeService
 
-    init() {
-        service = DefaultHomeService()
-    }
-
     init(service: HomeService) {
         self.service = service
     }

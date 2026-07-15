@@ -40,7 +40,7 @@ enum APIError: Error, Equatable {
     case invalidURL
     case invalidResponse
     case statusCode(Int)
-    case decodingFailed
+    case decodingFailed(String)
 }
 
 struct URLSessionAPIClient: APIClient {
@@ -80,11 +80,11 @@ struct URLSessionAPIClient: APIClient {
         do {
             return try decoder.decode(Request.Response.self, from: data)
         } catch {
-            throw APIError.decodingFailed
+            throw APIError.decodingFailed(error.localizedDescription)
         }
     }
 
-    private func makeURLRequest<Request: APIRequest>(from request: Request) throws -> URLRequest {
+    private func makeURLRequest(from request: some APIRequest) throws -> URLRequest {
         guard var components = URLComponents(
             url: baseURL.appendingPathComponent(request.path),
             resolvingAgainstBaseURL: false

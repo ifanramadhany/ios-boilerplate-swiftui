@@ -5,7 +5,7 @@ struct SettingsView: View {
     @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @StateObject private var viewModel: SettingsViewModel
 
-    init(service: SettingsService = DefaultSettingsService()) {
+    init(service: SettingsService) {
         _viewModel = StateObject(wrappedValue: SettingsViewModel(service: service))
     }
 
@@ -59,9 +59,18 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            SettingsView()
+            SettingsView(service: PreviewSettingsService())
                 .navigationTitle(AppTab.settings.title(for: .system))
         }
+    }
+}
+
+private struct PreviewSettingsService: SettingsService {
+    func loadItems() async throws -> [SettingsItem] {
+        [
+            SettingsItem(id: "app-version", title: .appVersion, subtitleText: "1.0"),
+            SettingsItem(id: "environment", title: .environment, subtitle: .developmentEnvironment)
+        ]
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel: HomeViewModel
 
-    init(service: HomeService = DefaultHomeService()) {
+    init(service: HomeService) {
         _viewModel = StateObject(wrappedValue: HomeViewModel(service: service))
     }
 
@@ -45,7 +45,13 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(service: PreviewHomeService())
+    }
+}
+
+private struct PreviewHomeService: HomeService {
+    func loadContent() async throws -> HomeContent {
+        HomeContent(title: .welcomeTitle, subtitle: .welcomeSubtitle)
     }
 }
 

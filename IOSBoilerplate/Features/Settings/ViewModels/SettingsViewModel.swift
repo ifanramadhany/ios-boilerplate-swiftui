@@ -7,10 +7,6 @@ final class SettingsViewModel: ObservableObject {
 
     private let service: SettingsService
 
-    init() {
-        service = DefaultSettingsService()
-    }
-
     init(service: SettingsService) {
         self.service = service
     }
