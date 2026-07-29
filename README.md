@@ -79,26 +79,38 @@ Keep feature-specific models, view models, services, and views inside the featur
 From the repository root:
 
 ```sh
-xcodebuild \
-  -project IOSBoilerplate.xcodeproj \
-  -scheme IOSBoilerplate \
-  -destination generic/platform=iOS \
-  CODE_SIGNING_ALLOWED=NO \
-  build
+make build
 ```
 
-## Test Build
+This builds the app for a generic iOS Simulator destination, which is the most reliable local and CI compile check because it does not require signing or a physical device.
+
+To check a generic physical-device build, run:
 
 ```sh
-xcodebuild \
-  -project IOSBoilerplate.xcodeproj \
-  -scheme IOSBoilerplate \
-  -destination generic/platform=iOS \
-  CODE_SIGNING_ALLOWED=NO \
-  build-for-testing
+make device-build
 ```
 
-Run tests from Xcode when simulator access and signing are configured.
+## Tests
+
+Run unit tests:
+
+```sh
+make test
+```
+
+Run a test build without executing tests:
+
+```sh
+make test-build
+```
+
+Run UI tests separately:
+
+```sh
+make ui-test
+```
+
+Keep unit tests and UI tests separate in local and CI checks. Unit tests verify app logic quickly. UI tests launch the simulator and can fail for simulator or automation reasons, so they should be reported separately.
 
 ## Code Quality
 
@@ -138,7 +150,7 @@ The workflow runs:
 make format-check
 make lint
 make build
-make test-build
+make test
 ```
 
 Before opening a pull request, run:
@@ -147,6 +159,7 @@ Before opening a pull request, run:
 make format
 make lint
 make build
+make test
 ```
 
 Repository maintainers should enable branch protection for `main` in GitHub and require the `Quality and Build` check before merging.
