@@ -121,8 +121,8 @@ struct IOSBoilerplateTests {
 
     @MainActor
     @Test func homeViewModelLoadsContentFromInjectedService() async {
-        let content = HomeContent(title: .welcomeTitle, subtitle: .welcomeSubtitle)
-        let viewModel = HomeViewModel(service: MockHomeService(result: .success(content)))
+        let content = HomeContent(title: .pokemonTitle, subtitle: .pokemonSubtitle, hasMorePages: false)
+        let viewModel = HomeViewModel(service: MockHomeService(contentResult: .success(content)))
 
         await viewModel.load()
 
@@ -130,8 +130,56 @@ struct IOSBoilerplateTests {
     }
 
     @MainActor
+    @Test func homeViewModelLoadsPokemonFromInjectedService() async {
+        let pokemon = [
+            PokemonCard(id: 1, name: "bulbasaur", imageURL: nil),
+            PokemonCard(id: 4, name: "charmander", imageURL: nil)
+        ]
+        let service = MockHomeService(
+            contentResult: .success(HomeContent(title: .pokemonTitle, subtitle: .pokemonSubtitle)),
+            pageResult: .success(PokemonPage(items: pokemon, hasMorePages: false))
+        )
+        let viewModel = HomeViewModel(service: service)
+
+        await viewModel.load()
+
+        #expect(viewModel.content.pokemon == pokemon)
+        #expect(viewModel.content.hasMorePages == false)
+        #expect(viewModel.errorMessage == nil)
+    }
+
+    @MainActor
+    @Test func homeViewModelLoadsNextPokemonPageUsingCurrentItemCount() async {
+        let firstPage = [
+            PokemonCard(id: 1, name: "bulbasaur", imageURL: nil),
+            PokemonCard(id: 4, name: "charmander", imageURL: nil)
+        ]
+        let secondPage = [
+            PokemonCard(id: 7, name: "squirtle", imageURL: nil)
+        ]
+        let service = MockHomeService(
+            contentResult: .success(HomeContent(title: .pokemonTitle, subtitle: .pokemonSubtitle)),
+            pageResults: [
+                .success(PokemonPage(items: firstPage, hasMorePages: true)),
+                .success(PokemonPage(items: secondPage, hasMorePages: false))
+            ]
+        )
+        let viewModel = HomeViewModel(service: service)
+
+        await viewModel.load()
+        await viewModel.loadNextPage()
+
+        #expect(service.loadPokemonRequests == [
+            PokemonPageRequest(offset: 0, limit: 20),
+            PokemonPageRequest(offset: 2, limit: 20)
+        ])
+        #expect(viewModel.content.pokemon == firstPage + secondPage)
+        #expect(viewModel.content.hasMorePages == false)
+    }
+
+    @MainActor
     @Test func homeViewModelShowsErrorContentWhenServiceFails() async {
-        let viewModel = HomeViewModel(service: MockHomeService(result: .failure(MockError.failure)))
+        let viewModel = HomeViewModel(service: MockHomeService(contentResult: .failure(MockError.failure)))
 
         await viewModel.load()
 
@@ -152,12 +200,45 @@ struct IOSBoilerplateTests {
     }
 }
 
-private struct MockHomeService: HomeService {
-    let result: Result<HomeContent, Error>
+private final class MockHomeService: HomeService {
+    let contentResult: Result<HomeContent, Error>
+    private var pageResults: [Result<PokemonPage, Error>]
+    private(set) var loadPokemonRequests: [PokemonPageRequest] = []
+
+    init(
+        contentResult: Result<HomeContent, Error>,
+        pageResult: Result<PokemonPage, Error> = .success(PokemonPage(items: [], hasMorePages: false))
+    ) {
+        self.contentResult = contentResult
+        pageResults = [pageResult]
+    }
+
+    init(
+        contentResult: Result<HomeContent, Error>,
+        pageResults: [Result<PokemonPage, Error>]
+    ) {
+        self.contentResult = contentResult
+        self.pageResults = pageResults
+    }
 
     func loadContent() async throws -> HomeContent {
-        try result.get()
+        try contentResult.get()
     }
+
+    func loadPokemon(offset: Int, limit: Int) async throws -> PokemonPage {
+        loadPokemonRequests.append(PokemonPageRequest(offset: offset, limit: limit))
+
+        guard !pageResults.isEmpty else {
+            throw MockError.failure
+        }
+
+        return try pageResults.removeFirst().get()
+    }
+}
+
+private struct PokemonPageRequest: Equatable {
+    let offset: Int
+    let limit: Int
 }
 
 private struct MockSettingsService: SettingsService {

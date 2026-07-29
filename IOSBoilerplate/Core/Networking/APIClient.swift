@@ -1,3 +1,4 @@
+import Alamofire
 import Foundation
 
 protocol APIClient {
@@ -43,6 +44,21 @@ enum APIError: Error, Equatable {
     case decodingFailed(String)
 }
 
+extension APIError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            "The API URL is invalid."
+        case .invalidResponse:
+            "The server response was invalid."
+        case let .statusCode(statusCode):
+            "The server returned status code \(statusCode)."
+        case .decodingFailed:
+            "The server response could not be read."
+        }
+    }
+}
+
 struct URLSessionAPIClient: APIClient {
     private let baseURL: URL
     private let session: URLSession
@@ -59,7 +75,7 @@ struct URLSessionAPIClient: APIClient {
     }
 
     func send<Request: APIRequest>(_ request: Request) async throws -> Request.Response {
-        let urlRequest = try makeURLRequest(from: request)
+        let urlRequest = try makeURLRequest(from: request, baseURL: baseURL)
         let data: Data
         let response: URLResponse
 
@@ -83,30 +99,77 @@ struct URLSessionAPIClient: APIClient {
             throw APIError.decodingFailed(error.localizedDescription)
         }
     }
+}
 
-    private func makeURLRequest(from request: some APIRequest) throws -> URLRequest {
-        guard var components = URLComponents(
-            url: baseURL.appendingPathComponent(request.path),
-            resolvingAgainstBaseURL: false
-        ) else {
-            throw APIError.invalidURL
-        }
+struct AlamofireAPIClient: APIClient {
+    private let baseURL: URL
+    private let session: Session
+    private let decoder: JSONDecoder
 
-        if !request.queryItems.isEmpty {
-            components.queryItems = request.queryItems
-        }
-
-        guard let url = components.url else {
-            throw APIError.invalidURL
-        }
-
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = request.method.rawValue
-        urlRequest.httpBody = request.body
-        for (key, value) in request.headers {
-            urlRequest.setValue(value, forHTTPHeaderField: key)
-        }
-
-        return urlRequest
+    init(
+        baseURL: URL,
+        session: Session = .default,
+        decoder: JSONDecoder = JSONDecoder()
+    ) {
+        self.baseURL = baseURL
+        self.session = session
+        self.decoder = decoder
     }
+
+    func send<Request: APIRequest>(_ request: Request) async throws -> Request.Response {
+        let urlRequest = try makeURLRequest(from: request, baseURL: baseURL)
+        let response = await session.request(urlRequest).serializingData().response
+
+        guard let httpResponse = response.response else {
+            if let error = response.error {
+                throw error
+            }
+
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.statusCode(httpResponse.statusCode)
+        }
+
+        if let error = response.error {
+            throw error
+        }
+
+        guard let data = response.data else {
+            throw APIError.invalidResponse
+        }
+
+        do {
+            return try decoder.decode(Request.Response.self, from: data)
+        } catch {
+            throw APIError.decodingFailed(error.localizedDescription)
+        }
+    }
+}
+
+private func makeURLRequest(from request: some APIRequest, baseURL: URL) throws -> URLRequest {
+    guard var components = URLComponents(
+        url: baseURL.appendingPathComponent(request.path),
+        resolvingAgainstBaseURL: false
+    ) else {
+        throw APIError.invalidURL
+    }
+
+    if !request.queryItems.isEmpty {
+        components.queryItems = request.queryItems
+    }
+
+    guard let url = components.url else {
+        throw APIError.invalidURL
+    }
+
+    var urlRequest = URLRequest(url: url)
+    urlRequest.httpMethod = request.method.rawValue
+    urlRequest.httpBody = request.body
+    for (key, value) in request.headers {
+        urlRequest.setValue(value, forHTTPHeaderField: key)
+    }
+
+    return urlRequest
 }

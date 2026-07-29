@@ -16,7 +16,7 @@ final class DependencyContainer {
     ) {
         self.environment = environment
         self.baseURL = baseURL
-        self.apiClient = apiClient ?? URLSessionAPIClient(baseURL: baseURL)
+        self.apiClient = apiClient ?? AlamofireAPIClient(baseURL: baseURL)
         self.homeService = homeService ?? DefaultHomeService(apiClient: self.apiClient)
         self.settingsService = settingsService ?? DefaultSettingsService(environment: environment)
     }

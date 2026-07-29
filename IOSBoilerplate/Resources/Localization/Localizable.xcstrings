@@ -113,6 +113,38 @@
         }
       }
     },
+    "home.pokemon.subtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browse Pokemon from PokeAPI"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jelajahi Pokemon dari PokeAPI"
+          }
+        }
+      }
+    },
+    "home.pokemon.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokemon"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokemon"
+          }
+        }
+      }
+    },
     "home.welcome.subtitle" : {
       "localizations" : {
         "en" : {
@@ -356,5 +388,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }

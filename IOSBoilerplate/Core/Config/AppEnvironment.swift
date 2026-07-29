@@ -5,7 +5,7 @@ enum AppEnvironment: String {
     case staging
     case production
 
-    static let defaultBaseURL = URL(string: "https://api.example.com") ?? URL(fileURLWithPath: "/")
+    static let defaultBaseURL = URL(string: "https://pokeapi.co/api/v2") ?? URL(fileURLWithPath: "/")
 
     static var current: AppEnvironment {
         current(from: Bundle.main.infoDictionary)
