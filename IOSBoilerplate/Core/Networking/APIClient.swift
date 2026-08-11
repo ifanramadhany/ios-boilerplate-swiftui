@@ -76,28 +76,30 @@ struct URLSessionAPIClient: APIClient {
 
     func send<Request: APIRequest>(_ request: Request) async throws -> Request.Response {
         let urlRequest = try makeURLRequest(from: request, baseURL: baseURL)
+        let startedAt = Date()
         let data: Data
         let response: URLResponse
 
         do {
             (data, response) = try await session.data(for: urlRequest)
         } catch {
+            await recordNetworkLog(
+                request: urlRequest,
+                response: nil,
+                data: nil,
+                error: error,
+                startedAt: startedAt
+            )
             throw error
         }
 
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.invalidResponse
-        }
-
-        guard (200...299).contains(httpResponse.statusCode) else {
-            throw APIError.statusCode(httpResponse.statusCode)
-        }
-
-        do {
-            return try decoder.decode(Request.Response.self, from: data)
-        } catch {
-            throw APIError.decodingFailed(error.localizedDescription)
-        }
+        return try await decodeResponse(
+            data: data,
+            response: response,
+            request: urlRequest,
+            decoder: decoder,
+            startedAt: startedAt
+        )
     }
 }
 
@@ -118,34 +120,121 @@ struct AlamofireAPIClient: APIClient {
 
     func send<Request: APIRequest>(_ request: Request) async throws -> Request.Response {
         let urlRequest = try makeURLRequest(from: request, baseURL: baseURL)
+        let startedAt = Date()
         let response = await session.request(urlRequest).serializingData().response
 
-        guard let httpResponse = response.response else {
-            if let error = response.error {
-                throw error
-            }
-
-            throw APIError.invalidResponse
-        }
-
-        guard (200...299).contains(httpResponse.statusCode) else {
-            throw APIError.statusCode(httpResponse.statusCode)
-        }
-
         if let error = response.error {
+            await recordNetworkLog(
+                request: urlRequest,
+                response: response.response,
+                data: response.data,
+                error: error,
+                startedAt: startedAt
+            )
             throw error
         }
 
-        guard let data = response.data else {
-            throw APIError.invalidResponse
-        }
-
-        do {
-            return try decoder.decode(Request.Response.self, from: data)
-        } catch {
-            throw APIError.decodingFailed(error.localizedDescription)
-        }
+        return try await decodeResponse(
+            data: response.data,
+            response: response.response,
+            request: urlRequest,
+            decoder: decoder,
+            startedAt: startedAt
+        )
     }
+}
+
+private func decodeResponse<Response: Decodable>(
+    data: Data?,
+    response: URLResponse?,
+    request: URLRequest,
+    decoder: JSONDecoder,
+    startedAt: Date
+) async throws -> Response {
+    guard let httpResponse = response as? HTTPURLResponse else {
+        return try await fail(
+            APIError.invalidResponse,
+            request: request,
+            response: nil,
+            data: data,
+            startedAt: startedAt
+        )
+    }
+
+    guard (200...299).contains(httpResponse.statusCode) else {
+        return try await fail(
+            APIError.statusCode(httpResponse.statusCode),
+            request: request,
+            response: httpResponse,
+            data: data,
+            startedAt: startedAt
+        )
+    }
+
+    guard let data else {
+        return try await fail(
+            APIError.invalidResponse,
+            request: request,
+            response: httpResponse,
+            data: nil,
+            startedAt: startedAt
+        )
+    }
+
+    do {
+        let decodedResponse = try decoder.decode(Response.self, from: data)
+        await recordNetworkLog(
+            request: request,
+            response: httpResponse,
+            data: data,
+            error: nil,
+            startedAt: startedAt
+        )
+        return decodedResponse
+    } catch {
+        return try await fail(
+            APIError.decodingFailed(error.localizedDescription),
+            request: request,
+            response: httpResponse,
+            data: data,
+            startedAt: startedAt
+        )
+    }
+}
+
+private func fail<Response>(
+    _ error: Error,
+    request: URLRequest,
+    response: HTTPURLResponse?,
+    data: Data?,
+    startedAt: Date
+) async throws -> Response {
+    await recordNetworkLog(
+        request: request,
+        response: response,
+        data: data,
+        error: error,
+        startedAt: startedAt
+    )
+    throw error
+}
+
+private func recordNetworkLog(
+    request: URLRequest,
+    response: HTTPURLResponse?,
+    data: Data?,
+    error: Error?,
+    startedAt: Date
+) async {
+    #if DEBUG
+    await NetworkLogStore.shared.record(
+        request: request,
+        statusCode: response?.statusCode,
+        responseData: data,
+        errorMessage: error?.localizedDescription,
+        startedAt: startedAt
+    )
+    #endif
 }
 
 private func makeURLRequest(from request: some APIRequest, baseURL: URL) throws -> URLRequest {

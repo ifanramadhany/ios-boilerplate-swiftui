@@ -5,6 +5,7 @@ import SwiftUI
 final class AppRouter: ObservableObject {
     @Published var selectedTab: AppTab = .home
     @Published var homePath = NavigationPath()
+    @Published var healthMonitoringPath = NavigationPath()
     @Published var settingsPath = NavigationPath()
 
     func select(_ tab: AppTab) {
@@ -15,6 +16,8 @@ final class AppRouter: ObservableObject {
         switch selectedTab {
         case .home:
             homePath = NavigationPath()
+        case .healthMonitoring:
+            healthMonitoringPath = NavigationPath()
         case .settings:
             settingsPath = NavigationPath()
         }

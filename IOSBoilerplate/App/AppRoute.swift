@@ -2,12 +2,15 @@ import SwiftUI
 
 enum AppTab: Hashable {
     case home
+    case healthMonitoring
     case settings
 
     var titleKey: String {
         switch self {
         case .home:
             "tab.home"
+        case .healthMonitoring:
+            "tab.health"
         case .settings:
             "tab.settings"
         }
@@ -21,6 +24,8 @@ enum AppTab: Hashable {
         switch self {
         case .home:
             "house"
+        case .healthMonitoring:
+            "heart.text.square"
         case .settings:
             "gearshape"
         }
@@ -29,5 +34,6 @@ enum AppTab: Hashable {
 
 enum AppRoute: Hashable {
     case home
+    case healthMonitoring
     case settings
 }

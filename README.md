@@ -150,7 +150,7 @@ The workflow runs:
 make format-check
 make lint
 make build
-make test
+make test-build
 ```
 
 Before opening a pull request, run:
@@ -160,6 +160,12 @@ make format
 make lint
 make build
 make test
+```
+
+Use `make test-build` in CI for deterministic compile verification, and run `make test` locally or in a dedicated unit-test job when a matching simulator runtime is available. You can override the simulator without editing the Makefile:
+
+```sh
+make test TEST_DESTINATION='platform=iOS Simulator,name=iPhone 17,OS=26.5'
 ```
 
 Repository maintainers should enable branch protection for `main` in GitHub and require the `Quality and Build` check before merging.

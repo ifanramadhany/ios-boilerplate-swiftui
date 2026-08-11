@@ -28,6 +28,22 @@ struct MainTabView: View {
             }
             .tag(AppTab.home)
 
+            NavigationStack(path: $router.healthMonitoringPath) {
+                HealthMonitoringView(service: dependencies.healthMonitoringService)
+                    .navigationTitle(AppTab.healthMonitoring.title(for: selectedLanguage))
+                    .navigationDestination(for: AppRoute.self) { route in
+                        destination(for: route)
+                    }
+            }
+            .tabItem {
+                Label {
+                    Text(AppTab.healthMonitoring.title(for: selectedLanguage))
+                } icon: {
+                    Image(systemName: AppTab.healthMonitoring.systemImage)
+                }
+            }
+            .tag(AppTab.healthMonitoring)
+
             NavigationStack(path: $router.settingsPath) {
                 SettingsView(service: dependencies.settingsService)
                     .navigationTitle(AppTab.settings.title(for: selectedLanguage))
@@ -56,6 +72,8 @@ struct MainTabView: View {
         switch route {
         case .home:
             ContentView(service: dependencies.homeService)
+        case .healthMonitoring:
+            HealthMonitoringView(service: dependencies.healthMonitoringService)
         case .settings:
             SettingsView(service: dependencies.settingsService)
         }
