@@ -58,10 +58,7 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            SettingsView(service: PreviewSettingsService())
-                .navigationTitle(AppTab.settings.title(for: .system))
-        }
+        SettingsView(service: PreviewSettingsService())
     }
 }
 

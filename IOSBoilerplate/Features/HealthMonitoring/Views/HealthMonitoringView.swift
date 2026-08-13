@@ -49,6 +49,7 @@ struct HealthMonitoringView: View {
                         .padding(.vertical, AppSpacing.large)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(AppSpacing.medium)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -94,10 +95,7 @@ struct HealthMonitoringView: View {
 
 struct HealthMonitoringView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            HealthMonitoringView(service: PreviewHealthMonitoringService())
-                .navigationTitle(AppTab.healthMonitoring.title(for: .system))
-        }
+        HealthMonitoringView(service: PreviewHealthMonitoringService())
     }
 }
 
