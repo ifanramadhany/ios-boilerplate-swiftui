@@ -1,41 +1,43 @@
-# IOSBoilerplate
+# Triply
 
-IOSBoilerplate is a SwiftUI iOS project structured for a growing team and a large codebase.
+Triply is a SwiftUI iOS app built with MVVM, SwiftUI navigation, and a reusable design system.
 
 ## Project Structure
 
 ```text
-IOSBoilerplate
-├── App
-├── Core
-│   ├── Networking
-│   ├── Persistence
-│   ├── Config
-│   ├── DependencyInjection
-│   ├── Analytics
-│   └── Logging
-├── Features
-│   └── Home
-│       ├── Views
-│       ├── ViewModels
-│       ├── Models
-│       └── Services
-├── DesignSystem
-│   ├── Components
-│   ├── Colors
-│   ├── Typography
-│   ├── Spacing
-│   └── Theme
-├── Shared
-│   ├── Extensions
-│   ├── Utilities
-│   └── Constants
-├── Resources
-│   ├── Assets.xcassets
-│   ├── Localization
-│   └── Fonts
-├── Tests
-└── UITests
+.
+├── Triply.xcodeproj
+├── Triply
+│   ├── App
+│   ├── Core
+│   │   ├── Networking
+│   │   ├── Persistence
+│   │   ├── Config
+│   │   ├── DependencyInjection
+│   │   ├── Analytics
+│   │   └── Logging
+│   ├── Features
+│   │   └── Home
+│   │       ├── Views
+│   │       ├── ViewModels
+│   │       ├── Models
+│   │       └── Services
+│   ├── DesignSystem
+│   │   ├── Components
+│   │   ├── Colors
+│   │   ├── Typography
+│   │   ├── Spacing
+│   │   └── Theme
+│   ├── Shared
+│   │   ├── Extensions
+│   │   ├── Utilities
+│   │   └── Constants
+│   └── Resources
+│       ├── Assets.xcassets
+│       ├── Localization
+│       └── Fonts
+├── TriplyTests
+└── TriplyUITests
 ```
 
 ## Folder Rules
@@ -46,8 +48,8 @@ IOSBoilerplate
 - `DesignSystem`: reusable UI components, design tokens, typography, colors, spacing, and app-wide UI primitives.
 - `Shared`: small reusable helpers, extensions, and utilities that are not infrastructure and not feature-owned.
 - `Resources`: asset catalogs, localized strings, fonts, and bundled static files.
-- `Tests`: unit and integration tests.
-- `UITests`: UI automation tests.
+- `TriplyTests`: unit and integration tests.
+- `TriplyUITests`: UI automation tests.
 
 Avoid using `Core` or `Shared` as general dumping grounds. Code should become shared only when at least two real call sites need it or when it is clearly infrastructure.
 
@@ -68,11 +70,20 @@ Keep feature-specific models, view models, services, and views inside the featur
 
 ## Requirements
 
-- Xcode 16.0 or newer
+- Xcode 17.0 or newer
 - iOS deployment target: 17.0
 - Swift 6 language mode
 - SwiftUI
 - Swift Testing / XCTest
+
+## UI Foundation
+
+Triply uses a custom SwiftUI app shell:
+
+- `AppNavigationHeader` owns the top navigation style.
+- `AppTabBar` owns the bottom tab style.
+- `AppRouter` keeps selected tab and navigation paths isolated per tab.
+- `AppColor` maps the asset-catalog color tokens used by the design system.
 
 ## Build
 
@@ -184,7 +195,7 @@ When packages are added, commit the generated `Package.resolved` file. It locks 
 
 - Keep pull requests focused and small enough to review.
 - Add or update tests for behavior changes.
-- Keep target membership correct: app code belongs to the app target, unit tests to `IOSBoilerplateTests`, and UI tests to `IOSBoilerplateUITests`.
+- Keep target membership correct: app code belongs to the app target, unit tests to `TriplyTests`, and UI tests to `TriplyUITests`.
 - Prefer feature ownership over broad shared abstractions.
 - Construct feature dependencies in `DependencyContainer`; do not create concrete services inside view models.
 - Keep view models testable by injecting protocols for services, clients, stores, and trackers.

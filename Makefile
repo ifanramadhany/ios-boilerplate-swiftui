@@ -1,13 +1,13 @@
-PROJECT ?= IOSBoilerplate.xcodeproj
-APP_SCHEME ?= IOSBoilerplate
-DEBUG_PRODUCTION_SCHEME ?= IOSBoilerplateDebugProduction
-UNIT_TEST_SCHEME ?= IOSBoilerplateUnitTests
-UI_TEST_SCHEME ?= IOSBoilerplateUITestsOnly
+PROJECT ?= Triply.xcodeproj
+APP_SCHEME ?= Triply
+DEBUG_PRODUCTION_SCHEME ?= TriplyDebugProduction
+UNIT_TEST_SCHEME ?= TriplyUnitTests
+UI_TEST_SCHEME ?= TriplyUITestsOnly
 BUILD_DESTINATION ?= generic/platform=iOS Simulator
 DEVICE_DESTINATION ?= generic/platform=iOS
 TEST_DESTINATION ?= platform=iOS Simulator,name=iPhone 17
-APP_DERIVED_DATA ?= /tmp/IOSBoilerplateAppDerivedData
-TEST_DERIVED_DATA ?= /tmp/IOSBoilerplateTestDerivedData
+APP_DERIVED_DATA ?= /tmp/TriplyAppDerivedData
+TEST_DERIVED_DATA ?= /tmp/TriplyTestDerivedData
 XCODEBUILD ?= xcodebuild -project $(PROJECT) CODE_SIGNING_ALLOWED=NO
 APP_XCODEBUILD = $(XCODEBUILD) -derivedDataPath $(APP_DERIVED_DATA)
 TEST_XCODEBUILD = $(XCODEBUILD) -derivedDataPath $(TEST_DERIVED_DATA)
@@ -33,10 +33,10 @@ ui-test:
 	$(TEST_XCODEBUILD) -scheme $(UI_TEST_SCHEME) -destination '$(TEST_DESTINATION)' test
 
 lint:
-	swiftlint lint --config .swiftlint.yml --cache-path /tmp/IOSBoilerplateSwiftLintCache
+	swiftlint lint --config .swiftlint.yml --cache-path /tmp/TriplySwiftLintCache
 
 format:
-	swiftformat IOSBoilerplate --config .swiftformat
+	swiftformat Triply TriplyTests TriplyUITests --config .swiftformat
 
 format-check:
-	swiftformat IOSBoilerplate --config .swiftformat --lint
+	swiftformat Triply TriplyTests TriplyUITests --config .swiftformat --lint
