@@ -77,6 +77,16 @@
 			path = Triply/Resources;
 			sourceTree = "<group>";
 		};
+		D820430D2FE56CB80086ADE6 /* Triply/Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Triply/Models;
+			sourceTree = "<group>";
+		};
+		D820430E2FE56CB80086ADE6 /* Triply/Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Triply/Views;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +121,9 @@
 				D8CF00002FE9000000000000 /* Configs */,
 				D82042DF2FE56CB60086ADE6 /* Triply/App */,
 				D82043082FE56CB80086ADE6 /* Triply/Core */,
+				D820430D2FE56CB80086ADE6 /* Triply/Models */,
 				D82043092FE56CB80086ADE6 /* Triply/Features */,
+				D820430E2FE56CB80086ADE6 /* Triply/Views */,
 				D820430A2FE56CB80086ADE6 /* Triply/DesignSystem */,
 				D820430B2FE56CB80086ADE6 /* Triply/Shared */,
 				D820430C2FE56CB80086ADE6 /* Triply/Resources */,
@@ -163,6 +175,8 @@
 				D820430A2FE56CB80086ADE6 /* Triply/DesignSystem */,
 				D820430B2FE56CB80086ADE6 /* Triply/Shared */,
 				D820430C2FE56CB80086ADE6 /* Triply/Resources */,
+				D820430D2FE56CB80086ADE6 /* Triply/Models */,
+				D820430E2FE56CB80086ADE6 /* Triply/Views */,
 			);
 			name = Triply;
 			packageProductDependencies = (
@@ -460,9 +474,9 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_API_BASE_URL = "$(API_BASE_URL)";
 				INFOPLIST_KEY_APP_ENVIRONMENT = "$(APP_ENVIRONMENT)";
+				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app reads steps, active calories, and heart rate from Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -497,9 +511,9 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_API_BASE_URL = "$(API_BASE_URL)";
 				INFOPLIST_KEY_APP_ENVIRONMENT = "$(APP_ENVIRONMENT)";
+				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app reads steps, active calories, and heart rate from Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -678,9 +692,9 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_API_BASE_URL = "$(API_BASE_URL)";
 				INFOPLIST_KEY_APP_ENVIRONMENT = "$(APP_ENVIRONMENT)";
+				INFOPLIST_KEY_CFBundleDisplayName = Triply;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app reads steps, active calories, and heart rate from Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
