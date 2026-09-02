@@ -144,7 +144,7 @@ extension FloatingTabBar {
         let bottomPadding: CGFloat = 8
         let itemSpacing: CGFloat = 4
         let centerSlotWidth: CGFloat = 90
-        let centerNotchRadius: CGFloat = 44
+        let centerNotchRadius: CGFloat = 40
         let normalItemHeight: CGFloat = 68
         let minimumHitSize: CGFloat = 44
         let activeIndicatorWidth: CGFloat = 18
@@ -191,13 +191,25 @@ private struct FloatingTabBarShape: Shape {
         )
 
         let notchHorizontalRadius = notchRadius * 1.15
-        let notchRect = CGRect(
-            x: rect.midX - notchHorizontalRadius,
-            y: rect.minY - notchRadius,
-            width: notchHorizontalRadius * 2,
-            height: notchRadius * 2
+        let notchBlendRadius = notchRadius * 0.36
+        let topY = rect.minY
+        let centerX = rect.midX
+        let leftStart = CGPoint(x: centerX - notchHorizontalRadius - notchBlendRadius, y: topY)
+        let bottomCenter = CGPoint(x: centerX, y: topY + notchRadius)
+        let rightEnd = CGPoint(x: centerX + notchHorizontalRadius + notchBlendRadius, y: topY)
+
+        path.move(to: leftStart)
+        path.addCurve(
+            to: bottomCenter,
+            control1: CGPoint(x: leftStart.x + notchBlendRadius * 1.35, y: topY),
+            control2: CGPoint(x: centerX - notchHorizontalRadius * 0.82, y: topY + notchRadius)
         )
-        path.addEllipse(in: notchRect)
+        path.addCurve(
+            to: rightEnd,
+            control1: CGPoint(x: centerX + notchHorizontalRadius * 0.82, y: topY + notchRadius),
+            control2: CGPoint(x: rightEnd.x - notchBlendRadius * 1.35, y: topY)
+        )
+        path.closeSubpath()
 
         return path
     }
