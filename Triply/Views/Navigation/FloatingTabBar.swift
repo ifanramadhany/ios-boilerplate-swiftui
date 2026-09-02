@@ -190,10 +190,11 @@ private struct FloatingTabBarShape: Shape {
             style: .continuous
         )
 
+        let notchHorizontalRadius = notchRadius * 1.15
         let notchRect = CGRect(
-            x: rect.midX - notchRadius,
+            x: rect.midX - notchHorizontalRadius,
             y: rect.minY - notchRadius,
-            width: notchRadius * 2,
+            width: notchHorizontalRadius * 2,
             height: notchRadius * 2
         )
         path.addEllipse(in: notchRect)
