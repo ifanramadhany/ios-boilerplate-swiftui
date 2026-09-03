@@ -102,7 +102,7 @@ struct MainTabView: View {
 }
 
 private extension View {
-    func appNavigationHeader(title: String) -> some View {
+    func appNavigationHeader(title: LocalizedStringKey) -> some View {
         navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .navigationBar)

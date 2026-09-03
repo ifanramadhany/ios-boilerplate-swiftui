@@ -4,8 +4,8 @@ struct ExploreView: View {
     var body: some View {
         TriplyPlaceholderView(
             systemImage: AppTab.explore.systemImage,
-            title: "Explore destinations",
-            message: "Search and discover new places for your next trip."
+            title: "explore.title",
+            message: "explore.subtitle"
         )
     }
 }

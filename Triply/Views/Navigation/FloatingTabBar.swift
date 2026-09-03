@@ -101,7 +101,7 @@ struct FloatingTabBar: View {
             .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(FloatingCenterButtonStyle(pressedScale: constants.pressedCenterScale))
-        .accessibilityLabel(AppTab.explore.accessibilityLabel)
+        .accessibilityLabel(Text(AppTab.explore.accessibilityLabel))
         .accessibilityAddTraits(selectedTab == .explore ? [.isButton, .isSelected] : .isButton)
     }
 
@@ -239,7 +239,7 @@ private struct FloatingTabItem: View {
         .frame(maxWidth: .infinity)
         .frame(height: constants.normalItemHeight)
         .contentShape(Rectangle())
-        .accessibilityLabel(tab.accessibilityLabel)
+        .accessibilityLabel(Text(tab.accessibilityLabel))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }

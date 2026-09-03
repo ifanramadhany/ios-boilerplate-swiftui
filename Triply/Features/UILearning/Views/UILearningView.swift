@@ -2,7 +2,12 @@ import SwiftUI
 import UIKit
 
 struct UILearningView: View {
+    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @State private var swiftUICounter = 0
+
+    private var selectedLanguage: AppLanguage {
+        AppLanguage(rawValue: appLanguage) ?? .system
+    }
 
     var body: some View {
         ScrollView {
@@ -11,7 +16,7 @@ struct UILearningView: View {
 
                 VStack(spacing: AppSpacing.medium) {
                     SwiftUIStateExample(count: $swiftUICounter)
-                    UIKitProgrammaticExample()
+                    UIKitProgrammaticExample(language: selectedLanguage)
                 }
             }
             .padding(AppSpacing.medium)
@@ -35,12 +40,12 @@ private struct UILearningHeaderView: View {
                 .background(AppColor.primary.opacity(0.12))
                 .clipShape(Circle())
 
-            Text("UI learning")
+            Text("ui_learning.title")
                 .font(AppTypography.title.weight(.bold))
                 .foregroundStyle(AppColor.textPrimary)
 
             Text(
-                "Tap each button and compare how SwiftUI state updates the view automatically while UIKit updates its labels manually."
+                "ui_learning.subtitle"
             )
             .font(AppTypography.body)
             .foregroundStyle(AppColor.textSecondary)
@@ -55,17 +60,17 @@ private struct SwiftUIStateExample: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
-                Text("SwiftUI")
+                Text("ui_learning.swiftui.title")
                     .font(AppTypography.caption.weight(.semibold))
                     .foregroundStyle(AppColor.primary)
 
-                Text("State changes update this text automatically.")
+                Text("ui_learning.swiftui.description")
                     .font(AppTypography.body.weight(.semibold))
                     .foregroundStyle(AppColor.textPrimary)
             }
 
             HStack {
-                Text("Count: \(count)")
+                Text("ui_learning.counter.count \(count)")
                     .font(.title2.weight(.bold))
                     .foregroundStyle(AppColor.textPrimary)
 
@@ -74,7 +79,7 @@ private struct SwiftUIStateExample: View {
                 Button {
                     count += 1
                 } label: {
-                    Label("Add", systemImage: "plus")
+                    Label("ui_learning.action.add", systemImage: "plus")
                         .font(AppTypography.body.weight(.semibold))
                 }
                 .buttonStyle(.borderedProminent)
@@ -88,20 +93,25 @@ private struct SwiftUIStateExample: View {
 }
 
 private struct UIKitProgrammaticExample: View {
+    let language: AppLanguage
+
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
-                Text("UIKit Programmatic")
+                Text("ui_learning.uikit.title")
                     .font(AppTypography.caption.weight(.semibold))
                     .foregroundStyle(AppColor.primary)
 
-                Text("The embedded UIKit view updates its label manually.")
+                Text("ui_learning.uikit.description")
                     .font(AppTypography.body.weight(.semibold))
                     .foregroundStyle(AppColor.textPrimary)
             }
 
-            UIKitCounterViewRepresentable()
-                .frame(height: 92)
+            UIKitCounterViewRepresentable(
+                addTitle: language.localizedString(forKey: "ui_learning.action.add"),
+                countFormat: language.localizedString(forKey: "ui_learning.counter.count_format")
+            )
+            .frame(height: 92)
         }
         .padding(AppSpacing.medium)
         .background(AppColor.surface)
@@ -110,11 +120,16 @@ private struct UIKitProgrammaticExample: View {
 }
 
 private struct UIKitCounterViewRepresentable: UIViewRepresentable {
+    let addTitle: String
+    let countFormat: String
+
     func makeUIView(context: Context) -> UIKitCounterView {
-        UIKitCounterView()
+        UIKitCounterView(addTitle: addTitle, countFormat: countFormat)
     }
 
-    func updateUIView(_ uiView: UIKitCounterView, context: Context) {}
+    func updateUIView(_ uiView: UIKitCounterView, context: Context) {
+        uiView.updateTexts(addTitle: addTitle, countFormat: countFormat)
+    }
 }
 
 private final class UIKitCounterView: UIView {
@@ -122,8 +137,20 @@ private final class UIKitCounterView: UIView {
     private let addButton = UIButton(type: .system)
 
     private var count = 0
+    private var addTitle: String
+    private var countFormat: String
+
+    init(addTitle: String, countFormat: String) {
+        self.addTitle = addTitle
+        self.countFormat = countFormat
+        super.init(frame: .zero)
+        setupView()
+        updateCountLabel()
+    }
 
     override init(frame: CGRect) {
+        addTitle = AppLanguage.system.localizedString(forKey: "ui_learning.action.add")
+        countFormat = AppLanguage.system.localizedString(forKey: "ui_learning.counter.count_format")
         super.init(frame: frame)
         setupView()
         updateCountLabel()
@@ -144,7 +171,7 @@ private final class UIKitCounterView: UIView {
         countLabel.textColor = .label
 
         addButton.configuration = .filled()
-        addButton.configuration?.title = "Add"
+        addButton.configuration?.title = addTitle
         addButton.configuration?.image = UIImage(systemName: "plus")
         addButton.configuration?.imagePadding = 6
         addButton.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
@@ -170,7 +197,14 @@ private final class UIKitCounterView: UIView {
         updateCountLabel()
     }
 
+    func updateTexts(addTitle: String, countFormat: String) {
+        self.addTitle = addTitle
+        self.countFormat = countFormat
+        addButton.configuration?.title = addTitle
+        updateCountLabel()
+    }
+
     private func updateCountLabel() {
-        countLabel.text = "Count: \(count)"
+        countLabel.text = String(format: countFormat, Int64(count))
     }
 }

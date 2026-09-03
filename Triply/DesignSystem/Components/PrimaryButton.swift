@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PrimaryButton: View {
-    let title: String
+    let title: LocalizedStringKey
     let action: () -> Void
 
     var body: some View {
@@ -16,7 +16,7 @@ struct PrimaryButton: View {
 
 struct PrimaryButton_Previews: PreviewProvider {
     static var previews: some View {
-        PrimaryButton(title: "Continue") {}
+        PrimaryButton(title: "common.continue") {}
             .padding()
     }
 }

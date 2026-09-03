@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @AppStorage("appAppearance") private var appAppearance = AppAppearance.system.rawValue
     @State private var activeSheet: ProfileSheet?
 
     private let settingsService: SettingsService
@@ -20,8 +21,8 @@ struct ProfileView: View {
                     } label: {
                         ProfileActionRow(
                             systemImage: "gearshape.fill",
-                            title: "Settings",
-                            subtitle: "Theme, language, and app information."
+                            title: "profile.action.settings.title",
+                            subtitle: "profile.action.settings.subtitle"
                         )
                     }
                     .buttonStyle(.plain)
@@ -31,8 +32,8 @@ struct ProfileView: View {
                     } label: {
                         ProfileActionRow(
                             systemImage: "rectangle.3.group",
-                            title: "UI learning",
-                            subtitle: "Compare SwiftUI and UIKit programmatic examples."
+                            title: "profile.action.ui_learning.title",
+                            subtitle: "profile.action.ui_learning.subtitle"
                         )
                     }
                     .buttonStyle(.plain)
@@ -43,14 +44,23 @@ struct ProfileView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColor.background)
         .sheet(item: $activeSheet) { sheet in
-            switch sheet {
-            case .settings:
-                SettingsView(service: settingsService)
-                    .presentationDragIndicator(.visible)
-            case .uiLearning:
-                UILearningView()
-                    .presentationDragIndicator(.visible)
-            }
+            sheetContent(for: sheet)
+                .preferredColorScheme(selectedAppearance.colorScheme)
+                .presentationDragIndicator(.visible)
+        }
+    }
+
+    private var selectedAppearance: AppAppearance {
+        AppAppearance(rawValue: appAppearance) ?? .system
+    }
+
+    @ViewBuilder
+    private func sheetContent(for sheet: ProfileSheet) -> some View {
+        switch sheet {
+        case .settings:
+            SettingsView(service: settingsService)
+        case .uiLearning:
+            UILearningView()
         }
     }
 }
@@ -69,11 +79,11 @@ private struct ProfileHeaderView: View {
                 .background(AppColor.primary.opacity(0.12))
                 .clipShape(Circle())
 
-            Text("Profile")
+            Text("profile.title")
                 .font(AppTypography.title.weight(.bold))
                 .foregroundStyle(AppColor.textPrimary)
 
-            Text("Manage your traveler details and preferences.")
+            Text("profile.subtitle")
                 .font(AppTypography.body)
                 .foregroundStyle(AppColor.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -94,8 +104,8 @@ private enum ProfileSheet: Identifiable {
 
 private struct ProfileActionRow: View {
     let systemImage: String
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
 
     var body: some View {
         HStack(spacing: AppSpacing.medium) {

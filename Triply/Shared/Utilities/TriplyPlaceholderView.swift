@@ -2,8 +2,8 @@ import SwiftUI
 
 struct TriplyPlaceholderView: View {
     let systemImage: String
-    let title: String
-    let message: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
 
     var body: some View {
         ScrollView {
@@ -39,7 +39,7 @@ struct TriplyPlaceholderView: View {
 #Preview {
     TriplyPlaceholderView(
         systemImage: "magnifyingglass",
-        title: "Explore destinations",
-        message: "Search and discover new places for your next trip."
+        title: "explore.title",
+        message: "explore.subtitle"
     )
 }

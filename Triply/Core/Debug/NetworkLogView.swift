@@ -10,9 +10,9 @@ struct NetworkLogView: View {
             List {
                 if store.entries.isEmpty {
                     ContentUnavailableView(
-                        "No Network Logs",
+                        "network_log.empty.title",
                         systemImage: "network.slash",
-                        description: Text("Run a request, then press Ctrl + Cmd + Z again.")
+                        description: Text("network_log.empty.description")
                     )
                 } else {
                     ForEach(store.entries) { entry in
@@ -20,17 +20,17 @@ struct NetworkLogView: View {
                     }
                 }
             }
-            .navigationTitle("Network Log")
+            .navigationTitle("network_log.title")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Clear") {
+                    Button("network_log.action.clear") {
                         store.clear()
                     }
                     .disabled(store.entries.isEmpty)
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done", action: dismiss)
+                    Button("network_log.action.done", action: dismiss)
                 }
             }
         }
@@ -43,19 +43,19 @@ private struct NetworkLogRow: View {
     var body: some View {
         DisclosureGroup {
             VStack(alignment: .leading, spacing: AppSpacing.medium) {
-                detail("URL", entry.url?.absoluteString ?? "-")
-                detail("Duration", "\(entry.durationMilliseconds) ms")
+                detail("network_log.field.url", entry.url?.absoluteString ?? "-")
+                detail("network_log.field.duration", "\(entry.durationMilliseconds) ms")
 
                 if !entry.requestHeaders.isEmpty {
-                    detail("Request Headers", formattedHeaders)
+                    detail("network_log.field.request_headers", formattedHeaders)
                 }
 
                 if let errorMessage = entry.errorMessage {
-                    detail("Error", errorMessage)
+                    detail("network_log.field.error", errorMessage)
                 }
 
                 if let responsePreview = entry.responsePreview {
-                    detail("Response", responsePreview)
+                    detail("network_log.field.response", responsePreview)
                 }
             }
             .padding(.vertical, AppSpacing.small)
@@ -100,9 +100,9 @@ private struct NetworkLogRow: View {
             .joined(separator: "\n")
     }
 
-    private func detail(_ title: String, _ value: String) -> some View {
+    private func detail(_ title: LocalizedStringKey, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
-            Text(verbatim: title)
+            Text(title)
                 .font(AppTypography.caption.weight(.semibold))
                 .foregroundStyle(AppColor.textPrimary)
 

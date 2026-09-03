@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AppNavigationHeader: View {
-    let title: String
+    let title: LocalizedStringKey
 
     var body: some View {
         HStack(spacing: AppSpacing.medium) {
@@ -30,5 +30,5 @@ struct AppNavigationHeader: View {
 }
 
 #Preview {
-    AppNavigationHeader(title: "Home")
+    AppNavigationHeader(title: "tab.home")
 }

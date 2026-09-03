@@ -11,18 +11,18 @@ enum AppTab: Hashable, CaseIterable, Identifiable {
         self
     }
 
-    var title: String {
+    var title: LocalizedStringKey {
         switch self {
         case .home:
-            "Home"
+            "tab.home"
         case .saved:
-            "Saved"
+            "tab.saved"
         case .explore:
-            "Explore"
+            "tab.explore"
         case .trips:
-            "Trips"
+            "tab.trips"
         case .profile:
-            "Profile"
+            "tab.profile"
         }
     }
 
@@ -41,18 +41,18 @@ enum AppTab: Hashable, CaseIterable, Identifiable {
         }
     }
 
-    var accessibilityLabel: String {
+    var accessibilityLabel: LocalizedStringKey {
         switch self {
         case .home:
-            "Home"
+            "tab.home.accessibility"
         case .saved:
-            "Saved places"
+            "tab.saved.accessibility"
         case .explore:
-            "Explore destinations"
+            "tab.explore.accessibility"
         case .trips:
-            "My trips"
+            "tab.trips.accessibility"
         case .profile:
-            "Profile"
+            "tab.profile.accessibility"
         }
     }
 
