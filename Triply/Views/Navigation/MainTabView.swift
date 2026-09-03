@@ -66,7 +66,7 @@ struct MainTabView: View {
             }
         case .profile:
             NavigationStack(path: $profilePath) {
-                ProfileView()
+                ProfileView(settingsService: dependencies.settingsService)
                     .navigationDestination(for: AppRoute.self) { route in
                         destination(for: route)
                     }
@@ -87,7 +87,7 @@ struct MainTabView: View {
         case .trips:
             TripsView()
         case .profile:
-            ProfileView()
+            ProfileView(settingsService: dependencies.settingsService)
         }
     }
 }
