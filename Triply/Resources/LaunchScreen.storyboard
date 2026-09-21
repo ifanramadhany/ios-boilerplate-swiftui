@@ -15,7 +15,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="launchLogo">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="launchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="launchLogo">
                                 <rect key="frame" x="86.666666666666686" y="316" width="220" height="220"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="220" id="launchLogoHeight"/>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchLogo" width="341.33334350585938" height="341.33334350585938"/>
+        <image name="launchLogo" width="341.33334350585938" height="341.33334350585938"/>
     </resources>
 </document>

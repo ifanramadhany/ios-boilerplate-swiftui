@@ -85,6 +85,50 @@ Triply uses a custom SwiftUI app shell:
 - `AppRouter` keeps selected tab and navigation paths isolated per tab.
 - `AppColor` maps the asset-catalog color tokens used by the design system.
 
+## Asset Naming
+
+Use `lowerCamelCase` for custom asset names and their source image filenames. Asset names
+come from the `.colorset` or `.imageset` folder, not from a name field in `Contents.json`.
+
+| Asset category | Convention | Examples |
+| --- | --- | --- |
+| Shared colors | `app` + semantic role | `appPrimary`, `appBackground`, `appTextPrimary` |
+| Feature colors | `app` + feature + role | `appTripsMapBackground` |
+| Images | Purpose, with feature when relevant | `launchLogo`, `tripsEmptyState`, `profilePlaceholder` |
+| Image files | Match the purpose; add scale or appearance when needed | `launchLogo@2x.png`, `appIconDark.png` |
+| Configured Xcode assets | Keep the existing project names | `AppIcon`, `AccentColor` |
+
+- Name colors by their purpose, not their current RGB value. Avoid generic asset names
+  such as `primary` that can conflict with generated SwiftUI members.
+- Keep light and dark appearances in the same color set. `appPrimaryDark` is a separate
+  darker brand shade used for shadows; it has its own light and dark appearances.
+- Never create names that differ only by capitalization. Avoid spaces, hyphens, and
+  numbered names such as `image1`.
+- Access shared colors through `AppColor` in views. Define the mapping with generated
+  resource symbols so missing assets are caught during compilation:
+
+  ```swift
+  // DesignSystem/Colors/AppColor.swift
+  static let primary = Color(.appPrimary)
+
+  // A view
+  Text("Triply").foregroundStyle(AppColor.primary)
+  ```
+
+- Use typed image resources in SwiftUI, for example `Image(.launchLogo)`. Storyboard
+  references must match the asset name exactly.
+- Six unused colors from the earlier palette are retained as `appLegacyBackground`,
+  `appLegacySurface`, `appLegacyTextPrimary`, `appLegacyTextSecondary`,
+  `appLegacyHeaderBackground`, and `appLegacyIconPrimary`. Their values differ from
+  the active palette. Do not use them in new views or merge them based only on similar
+  names; use the active `AppColor` tokens.
+- When renaming an asset, update Swift, storyboard, and any project-setting references
+  together. For a capitalization-only rename, move through a temporary name, then
+  check Git's staged path has the intended spelling before committing.
+- Before merging asset changes, run `make build` and review both light and dark
+  appearances when color values or artwork change. Reviewers should check semantic
+  names, matching references, and unintended duplicate assets.
+
 ## Build
 
 From the repository root:
