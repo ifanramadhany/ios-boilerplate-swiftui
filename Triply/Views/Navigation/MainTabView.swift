@@ -34,7 +34,7 @@ struct MainTabView: View {
         switch selectedTab {
         case .home:
             NavigationStack(path: $homePath) {
-                HomeView(service: dependencies.homeService)
+                DashboardView()
                     .navigationDestination(for: AppRoute.self) { route in
                         destination(for: route)
                     }
