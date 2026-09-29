@@ -33,7 +33,7 @@ struct DashboardView: View {
 
                 Text("Quick Actions").font(.largeTitle)
 
-                HStack {
+                HStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 10) {
                         Image(systemName: "bookmark").foregroundStyle(.orange)
                             .font(.system(size: 20, weight: .bold))
@@ -68,7 +68,24 @@ struct DashboardView: View {
                         RoundedRectangle(cornerRadius: 12)
                     )
                 }
-            }.frame(maxWidth: .infinity, alignment: .leading).padding(20)
+                Button {
+                    print("Open Home feed tapped")
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "square.grid.month")
+                            .foregroundStyle(.orange)
+
+                        Text("Open Home feed")
+                            .font(.body.weight(.bold))
+                            .foregroundStyle(.orange)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(16)
+                    .background(Color.orange.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+            }.frame(maxWidth: .infinity, alignment: .center).padding(20)
         }
     }
 }
