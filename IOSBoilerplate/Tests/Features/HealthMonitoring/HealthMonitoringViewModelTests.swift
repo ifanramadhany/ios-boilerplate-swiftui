@@ -33,6 +33,6 @@ struct HealthMonitoringViewModelTests {
 
         #expect(service.didRequestAuthorization)
         #expect(viewModel.summary == nil)
-        #expect(viewModel.errorMessage != nil)
+        #expect(viewModel.errorMessage == .loadError)
     }
 }

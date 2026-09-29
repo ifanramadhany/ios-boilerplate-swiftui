@@ -24,7 +24,7 @@ struct ContentView: View {
                 headerView
 
                 if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
+                    errorMessage.text
                         .font(AppTypography.caption)
                         .foregroundStyle(.red)
                 }
@@ -58,6 +58,7 @@ struct ContentView: View {
             viewModel.content.title.text
                 .font(AppTypography.title.weight(.bold))
                 .foregroundStyle(AppColor.textPrimary)
+                .accessibilityIdentifier("home.title")
 
             if let subtitle = viewModel.content.subtitle {
                 subtitle.text

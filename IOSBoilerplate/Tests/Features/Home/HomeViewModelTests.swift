@@ -65,6 +65,6 @@ struct HomeViewModelTests {
         await viewModel.load()
 
         #expect(viewModel.content.title == .loadError)
-        #expect(viewModel.content.subtitleText == MockError.failure.localizedDescription)
+        #expect(viewModel.content.subtitleText == nil)
     }
 }

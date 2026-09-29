@@ -8,7 +8,7 @@ final class HomeViewModel: ObservableObject {
         subtitle: .pokemonSubtitle
     )
     @Published private(set) var isLoading = false
-    @Published private(set) var errorMessage: String?
+    @Published private(set) var errorMessage: HomeLocalizedText?
 
     private let service: HomeService
     private let pageSize = 20
@@ -28,7 +28,7 @@ final class HomeViewModel: ObservableObject {
         } catch {
             content = HomeContent(
                 title: .loadError,
-                subtitleText: error.localizedDescription
+                subtitleText: nil
             )
         }
     }
@@ -57,7 +57,7 @@ final class HomeViewModel: ObservableObject {
             )
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = .loadError
         }
     }
 }

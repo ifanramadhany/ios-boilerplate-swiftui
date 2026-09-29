@@ -1,6 +1,6 @@
 import Foundation
 
-enum AppEnvironment: String {
+enum AppEnvironment: String, Equatable {
     case development
     case staging
     case production

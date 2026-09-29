@@ -74,6 +74,16 @@ Keep feature-specific models, view models, services, and views inside the featur
 - SwiftUI
 - Swift Testing / XCTest
 
+## Assets and Localization
+
+- Name custom assets in `lowerCamelCase`.
+- Prefix shared color assets with `app` and use semantic names, such as `appBackground` and `appTextPrimary`.
+- Keep Xcode's required `AppIcon` and `AccentColor` catalog names unchanged.
+- Give image files descriptive names. Use scale suffixes such as `@2x` and `@3x` for imagesets; use appearance names such as `appIconDark` for app icon variants.
+- Prefer generated typed color symbols, such as `Color(.appBackground)`, so asset references are checked by the compiler.
+- Put user-visible copy in `Localizable.xcstrings`, with stable feature-prefixed keys and a translation for each supported language.
+- Localize system permission explanations in each language's `InfoPlist.strings` file. Map service errors to localized UI messages instead of showing raw error descriptions.
+
 ## Build
 
 From the repository root:
@@ -151,6 +161,7 @@ make format-check
 make lint
 make build
 make test-build
+make test
 ```
 
 Before opening a pull request, run:
@@ -162,7 +173,7 @@ make build
 make test
 ```
 
-Use `make test-build` in CI for deterministic compile verification, and run `make test` locally or in a dedicated unit-test job when a matching simulator runtime is available. You can override the simulator without editing the Makefile:
+CI runs unit tests on the configured simulator destination. You can override the simulator without editing the Makefile:
 
 ```sh
 make test TEST_DESTINATION='platform=iOS Simulator,name=iPhone 17,OS=26.5'

@@ -44,65 +44,6 @@ enum APIError: Error, Equatable {
     case decodingFailed(String)
 }
 
-extension APIError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            "The API URL is invalid."
-        case .invalidResponse:
-            "The server response was invalid."
-        case let .statusCode(statusCode):
-            "The server returned status code \(statusCode)."
-        case .decodingFailed:
-            "The server response could not be read."
-        }
-    }
-}
-
-struct URLSessionAPIClient: APIClient {
-    private let baseURL: URL
-    private let session: URLSession
-    private let decoder: JSONDecoder
-
-    init(
-        baseURL: URL,
-        session: URLSession = .shared,
-        decoder: JSONDecoder = JSONDecoder()
-    ) {
-        self.baseURL = baseURL
-        self.session = session
-        self.decoder = decoder
-    }
-
-    func send<Request: APIRequest>(_ request: Request) async throws -> Request.Response {
-        let urlRequest = try makeURLRequest(from: request, baseURL: baseURL)
-        let startedAt = Date()
-        let data: Data
-        let response: URLResponse
-
-        do {
-            (data, response) = try await session.data(for: urlRequest)
-        } catch {
-            await recordNetworkLog(
-                request: urlRequest,
-                response: nil,
-                data: nil,
-                error: error,
-                startedAt: startedAt
-            )
-            throw error
-        }
-
-        return try await decodeResponse(
-            data: data,
-            response: response,
-            request: urlRequest,
-            decoder: decoder,
-            startedAt: startedAt
-        )
-    }
-}
-
 struct AlamofireAPIClient: APIClient {
     private let baseURL: URL
     private let session: Session
@@ -127,7 +68,6 @@ struct AlamofireAPIClient: APIClient {
             await recordNetworkLog(
                 request: urlRequest,
                 response: response.response,
-                data: response.data,
                 error: error,
                 startedAt: startedAt
             )
@@ -156,7 +96,6 @@ private func decodeResponse<Response: Decodable>(
             APIError.invalidResponse,
             request: request,
             response: nil,
-            data: data,
             startedAt: startedAt
         )
     }
@@ -166,7 +105,6 @@ private func decodeResponse<Response: Decodable>(
             APIError.statusCode(httpResponse.statusCode),
             request: request,
             response: httpResponse,
-            data: data,
             startedAt: startedAt
         )
     }
@@ -176,7 +114,6 @@ private func decodeResponse<Response: Decodable>(
             APIError.invalidResponse,
             request: request,
             response: httpResponse,
-            data: nil,
             startedAt: startedAt
         )
     }
@@ -186,7 +123,6 @@ private func decodeResponse<Response: Decodable>(
         await recordNetworkLog(
             request: request,
             response: httpResponse,
-            data: data,
             error: nil,
             startedAt: startedAt
         )
@@ -196,7 +132,6 @@ private func decodeResponse<Response: Decodable>(
             APIError.decodingFailed(error.localizedDescription),
             request: request,
             response: httpResponse,
-            data: data,
             startedAt: startedAt
         )
     }
@@ -206,13 +141,11 @@ private func fail<Response>(
     _ error: Error,
     request: URLRequest,
     response: HTTPURLResponse?,
-    data: Data?,
     startedAt: Date
 ) async throws -> Response {
     await recordNetworkLog(
         request: request,
         response: response,
-        data: data,
         error: error,
         startedAt: startedAt
     )
@@ -222,7 +155,6 @@ private func fail<Response>(
 private func recordNetworkLog(
     request: URLRequest,
     response: HTTPURLResponse?,
-    data: Data?,
     error: Error?,
     startedAt: Date
 ) async {
@@ -230,8 +162,7 @@ private func recordNetworkLog(
     await NetworkLogStore.shared.record(
         request: request,
         statusCode: response?.statusCode,
-        responseData: data,
-        errorMessage: error?.localizedDescription,
+        errorMessage: error.map { String(describing: $0) },
         startedAt: startedAt
     )
     #endif

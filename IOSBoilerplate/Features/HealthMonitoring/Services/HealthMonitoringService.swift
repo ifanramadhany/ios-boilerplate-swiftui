@@ -8,21 +8,8 @@ protocol HealthMonitoringService {
 
 enum HealthMonitoringError: Error, Equatable {
     case healthDataUnavailable
-    case authorizationDenied
+    case authorizationRequestFailed
     case missingQuantityType(String)
-}
-
-extension HealthMonitoringError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .healthDataUnavailable:
-            NSLocalizedString(HealthMonitoringLocalizedText.unavailable.key, comment: "")
-        case .authorizationDenied:
-            NSLocalizedString(HealthMonitoringLocalizedText.loadError.key, comment: "")
-        case let .missingQuantityType(identifier):
-            "Health data type is unavailable: \(identifier)"
-        }
-    }
 }
 
 struct DefaultHealthMonitoringService: HealthMonitoringService {
@@ -59,7 +46,7 @@ struct DefaultHealthMonitoringService: HealthMonitoringService {
                 }
 
                 guard success else {
-                    continuation.resume(throwing: HealthMonitoringError.authorizationDenied)
+                    continuation.resume(throwing: HealthMonitoringError.authorizationRequestFailed)
                     return
                 }
 

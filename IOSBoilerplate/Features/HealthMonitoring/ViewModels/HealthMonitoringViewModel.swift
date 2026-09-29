@@ -5,7 +5,7 @@ import SwiftUI
 final class HealthMonitoringViewModel: ObservableObject {
     @Published private(set) var summary: HealthMonitoringSummary?
     @Published private(set) var isLoading = false
-    @Published private(set) var errorMessage: String?
+    @Published private(set) var errorMessage: HealthMonitoringLocalizedText?
 
     private let service: HealthMonitoringService
 
@@ -28,7 +28,13 @@ final class HealthMonitoringViewModel: ObservableObject {
             summary = try await service.loadTodaySummary()
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            let isHealthDataUnavailable = (error as? HealthMonitoringError) == .healthDataUnavailable
+
+            if isHealthDataUnavailable {
+                errorMessage = .unavailable
+            } else {
+                errorMessage = .loadError
+            }
         }
     }
 }

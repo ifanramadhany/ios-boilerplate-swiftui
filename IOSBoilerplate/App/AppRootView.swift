@@ -24,7 +24,8 @@ struct AppRootView: View {
                 DebugKeyboardShortcutView(
                     input: "z",
                     modifierFlags: [.command, .control],
-                    discoverabilityTitle: "Network Log"
+                    discoverabilityTitle: (AppLanguage(rawValue: appLanguage) ?? .system)
+                        .localizedString(forKey: "debug.network_log.title")
                 ) {
                     isNetworkLogPresented = true
                 }

@@ -1,3 +1,4 @@
+import Alamofire
 import Foundation
 import Testing
 @testable import IOSBoilerplate
@@ -75,15 +76,15 @@ struct APIClientTests {
 
     private func makeAPIClient(
         handler: @escaping @Sendable (URLRequest) throws -> (HTTPURLResponse, Data)
-    ) -> URLSessionAPIClient {
+    ) -> AlamofireAPIClient {
         MockURLProtocol.requestHandler = handler
 
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [MockURLProtocol.self]
 
-        return URLSessionAPIClient(
+        return AlamofireAPIClient(
             baseURL: URL(string: "https://api.example.test") ?? URL(fileURLWithPath: "/"),
-            session: URLSession(configuration: configuration)
+            session: Session(configuration: configuration)
         )
     }
 
@@ -108,7 +109,7 @@ private struct TestRequest: APIRequest {
     typealias Response = TestResponse
 
     let path: String
-    let method: HTTPMethod = .get
+    let method: IOSBoilerplate.HTTPMethod = .get
     let queryItems: [URLQueryItem]
 
     init(path: String, queryItems: [URLQueryItem] = []) {

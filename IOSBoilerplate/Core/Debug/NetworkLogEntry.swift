@@ -9,7 +9,6 @@ struct NetworkLogEntry: Equatable, Identifiable {
     let statusCode: Int?
     let durationMilliseconds: Int
     let requestHeaders: [String: String]
-    let responsePreview: String?
     let errorMessage: String?
 
     init(
@@ -20,7 +19,6 @@ struct NetworkLogEntry: Equatable, Identifiable {
         statusCode: Int?,
         durationMilliseconds: Int,
         requestHeaders: [String: String],
-        responsePreview: String?,
         errorMessage: String?
     ) {
         self.id = id
@@ -30,18 +28,8 @@ struct NetworkLogEntry: Equatable, Identifiable {
         self.statusCode = statusCode
         self.durationMilliseconds = durationMilliseconds
         self.requestHeaders = requestHeaders
-        self.responsePreview = responsePreview
         self.errorMessage = errorMessage
     }
 }
 
-extension NetworkLogEntry {
-    var statusText: String {
-        guard let statusCode else {
-            return "No status"
-        }
-
-        return String(statusCode)
-    }
-}
 #endif

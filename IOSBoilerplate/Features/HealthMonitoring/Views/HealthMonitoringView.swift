@@ -18,7 +18,7 @@ struct HealthMonitoringView: View {
                 headerView
 
                 if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
+                    errorMessage.text
                         .font(AppTypography.caption)
                         .foregroundStyle(.red)
                 }

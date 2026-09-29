@@ -65,7 +65,11 @@ struct SettingsView_Previews: PreviewProvider {
 private struct PreviewSettingsService: SettingsService {
     func loadItems() async throws -> [SettingsItem] {
         [
-            SettingsItem(id: "app-version", title: .appVersion, subtitleText: "1.0"),
+            SettingsItem(
+                id: "app-version",
+                title: .appVersion,
+                subtitleText: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+            ),
             SettingsItem(id: "environment", title: .environment, subtitle: .developmentEnvironment)
         ]
     }

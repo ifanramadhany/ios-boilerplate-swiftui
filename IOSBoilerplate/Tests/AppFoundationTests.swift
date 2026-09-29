@@ -41,4 +41,14 @@ struct AppFoundationTests {
 
         #expect(baseURL == AppEnvironment.defaultBaseURL)
     }
+
+    @Test func appConfigurationReadsEnvironmentAndBaseURLTogether() {
+        let configuration = AppConfiguration.current(from: [
+            "APP_ENVIRONMENT": "production",
+            "API_BASE_URL": "https://api.example.test"
+        ])
+
+        #expect(configuration.environment == .production)
+        #expect(configuration.baseURL.absoluteString == "https://api.example.test")
+    }
 }

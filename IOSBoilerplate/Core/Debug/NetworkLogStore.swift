@@ -9,17 +9,13 @@ final class NetworkLogStore: ObservableObject {
     @Published private(set) var entries: [NetworkLogEntry] = []
 
     private let maxEntries: Int
-    private let previewLimit: Int
-
-    init(maxEntries: Int = 100, previewLimit: Int = 4000) {
+    init(maxEntries: Int = 100) {
         self.maxEntries = maxEntries
-        self.previewLimit = previewLimit
     }
 
     func record(
         request: URLRequest,
         statusCode: Int?,
-        responseData: Data?,
         errorMessage: String?,
         startedAt: Date
     ) {
@@ -27,11 +23,10 @@ final class NetworkLogStore: ObservableObject {
         let entry = NetworkLogEntry(
             requestedAt: startedAt,
             method: request.httpMethod ?? "GET",
-            url: request.url,
+            url: redactedURL(from: request.url),
             statusCode: statusCode,
             durationMilliseconds: durationMilliseconds,
             requestHeaders: redactedHeaders(from: request.allHTTPHeaderFields ?? [:]),
-            responsePreview: responsePreview(from: responseData),
             errorMessage: errorMessage
         )
 
@@ -49,36 +44,36 @@ final class NetworkLogStore: ObservableObject {
     private func redactedHeaders(from headers: [String: String]) -> [String: String] {
         headers.reduce(into: [:]) { result, header in
             let key = header.key
-            result[key] = isSensitiveHeader(key) ? "<redacted>" : header.value
+            result[key] = isSensitiveField(key) ? "<redacted>" : header.value
         }
     }
 
-    private func isSensitiveHeader(_ key: String) -> Bool {
-        let normalizedKey = key.lowercased()
+    private func isSensitiveField(_ key: String) -> Bool {
+        let normalizedKey = key.lowercased().filter { $0.isLetter || $0.isNumber }
         return normalizedKey == "authorization"
-            || normalizedKey == "cookie"
-            || normalizedKey == "set-cookie"
-            || normalizedKey == "x-api-key"
+            || normalizedKey.contains("cookie")
+            || normalizedKey.contains("apikey")
             || normalizedKey.contains("token")
+            || normalizedKey.contains("password")
+            || normalizedKey.contains("secret")
+            || normalizedKey.contains("email")
+            || normalizedKey.contains("phone")
+            || normalizedKey.contains("mobile")
+            || normalizedKey == "ssn"
     }
 
-    private func responsePreview(from data: Data?) -> String? {
-        guard let data, !data.isEmpty else {
-            return nil
+    private func redactedURL(from url: URL?) -> URL? {
+        guard let url,
+              var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else {
+            return url
         }
 
-        let object = try? JSONSerialization.jsonObject(with: data)
-        let prettyPrintedData = object.flatMap {
-            try? JSONSerialization.data(withJSONObject: $0, options: [.prettyPrinted, .sortedKeys])
-        }
-        let previewData = prettyPrintedData ?? data
-        let text = String(data: previewData, encoding: .utf8) ?? "\(previewData.count) bytes"
-
-        guard text.count > previewLimit else {
-            return text
+        components.queryItems = components.queryItems?.map { item in
+            isSensitiveField(item.name) ? URLQueryItem(name: item.name, value: "<redacted>") : item
         }
 
-        return "\(text.prefix(previewLimit))\n... truncated"
+        return components.url
     }
 }
 #endif

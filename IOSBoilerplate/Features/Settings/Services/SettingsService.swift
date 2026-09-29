@@ -12,11 +12,13 @@ struct DefaultSettingsService: SettingsService {
     }
 
     func loadItems() async throws -> [SettingsItem] {
-        [
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+
+        return [
             SettingsItem(
                 id: "app-version",
                 title: .appVersion,
-                subtitleText: "1.0"
+                subtitleText: appVersion
             ),
             SettingsItem(
                 id: "environment",
