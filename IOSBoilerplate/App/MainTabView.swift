@@ -89,8 +89,7 @@ struct MainTabView_Previews: PreviewProvider {
 
 private extension View {
     func tabHeader(title: String) -> some View {
-        navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
+        navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(title)
